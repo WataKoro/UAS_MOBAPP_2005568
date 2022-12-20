@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import edu.upi.cs.yudiwbs.uas_template.databinding.FragmentDuaBinding;
 
@@ -82,7 +84,9 @@ public class FragmentDua extends Fragment implements SensorEventListener{
         binding.buttonFrag2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alHasil.add(new Hasil("HP Diangkat"));
+                SimpleDateFormat s = new SimpleDateFormat("hh:mm:ss");
+                String ts = s.format(new Date());
+                alHasil.add(new Hasil("HP Diangkat " + ts));
                 adapter.notifyDataSetChanged();
             }
         });
