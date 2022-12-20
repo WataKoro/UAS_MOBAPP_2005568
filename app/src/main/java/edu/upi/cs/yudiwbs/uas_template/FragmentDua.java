@@ -29,7 +29,6 @@ public class FragmentDua extends Fragment implements SensorEventListener{
     AdapterHasil adapter;
     RecyclerView.LayoutManager lm;
 
-    private TextView tvHasil;
     String TAG = "debug_kel6";
 
     public FragmentDua() {
@@ -50,10 +49,7 @@ public class FragmentDua extends Fragment implements SensorEventListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tvHasil = tvHasil.findViewById(R.id.tvHasil);
-        tvHasil.setText("mulai");
-        sm = (SensorManager)
-                getActivity().getSystemService(getActivity().getApplicationContext().SENSOR_SERVICE);
+        sm = (SensorManager) getActivity().getSystemService(getActivity().getApplicationContext().SENSOR_SERVICE);
         senAccel = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (sm != null && senAccel != null){
             Log.d(TAG,"Sukses, device punya sensor accelerometer!");
@@ -69,6 +65,10 @@ public class FragmentDua extends Fragment implements SensorEventListener{
                              Bundle savedInstanceState) {
         binding = FragmentDuaBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        View tvHasilView = inflater.inflate(R.layout.fragment_dua, container, false);
+
+        TextView tvHasil = (TextView) tvHasilView.findViewById(R.id.tvHasil);
+        tvHasil.setText("Mulai");
 
         adapter = new AdapterHasil(alHasil);
         binding.rvHasil.setAdapter(adapter);
@@ -82,7 +82,7 @@ public class FragmentDua extends Fragment implements SensorEventListener{
         binding.buttonFrag2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alHasil.add(new Hasil("satu..."));
+                alHasil.add(new Hasil("HP Diangkat"));
                 adapter.notifyDataSetChanged();
             }
         });
@@ -103,7 +103,7 @@ public class FragmentDua extends Fragment implements SensorEventListener{
             isTabrakan = true;
         }
         if (isTabrakan) {
-            Log.d(TAG, "TABRAKAN!!");
+            Log.d(TAG, "HP Diangkat");
             //tvHasil.setText("TABRAKAN!!");
         } else{
             long timestamp = System.currentTimeMillis();

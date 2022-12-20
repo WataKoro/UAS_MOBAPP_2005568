@@ -13,7 +13,7 @@
         android:id="@+id/tvKeterangan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fragment Dua"
+        android:text="Fragment Satu"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
