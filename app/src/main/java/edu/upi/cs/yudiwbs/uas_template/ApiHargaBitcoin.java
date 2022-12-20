@@ -7,7 +7,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class ApiHargaBitcoin {
-    private static final String BASE_URL = "https://api.coindesk.com/v1/";
+    private static final String BASE_URL = "https://api.adviceslip.com/";
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

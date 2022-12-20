@@ -1,5 +1,9 @@
 package edu.upi.cs.yudiwbs.uas_template;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,16 +11,17 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import edu.upi.cs.yudiwbs.uas_template.databinding.FragmentDuaBinding;
-import edu.upi.cs.yudiwbs.uas_template.databinding.FragmentSatuBinding;
 
-public class FragmentDua extends Fragment {
+public class FragmentDua extends Fragment implements SensorEventListener{
 
     private FragmentDuaBinding binding;
 
@@ -24,6 +29,8 @@ public class FragmentDua extends Fragment {
     AdapterHasil adapter;
     RecyclerView.LayoutManager lm;
 
+    private TextView tvHasil;
+    String TAG = "debug_kel6";
 
     public FragmentDua() {
         // Required empty public constructor
@@ -36,9 +43,25 @@ public class FragmentDua extends Fragment {
         return fragment;
     }
 
+    private SensorManager sm;
+    private Sensor senAccel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tvHasil = tvHasil.findViewById(R.id.tvHasil);
+        tvHasil.setText("mulai");
+        sm = (SensorManager)
+                getActivity().getSystemService(getActivity().getApplicationContext().SENSOR_SERVICE);
+        senAccel = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (sm != null && senAccel != null){
+            Log.d(TAG,"Sukses, device punya sensor accelerometer!");
+        }
+        else {
+            // gagal, tidak ada sensor accelerometer.
+            Log.d(TAG,"Tidak ada sensor accelerometer!");
+        }
     }
 
     @Override
@@ -64,5 +87,45 @@ public class FragmentDua extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        double ax=0,ay=0,az=0;
+        boolean isTabrakan = false;
+        // menangkap perubahan nilai sensor
+        if (sensorEvent.sensor.getType()==Sensor.TYPE_ACCELEROMETER) {
+            ax=sensorEvent.values[0];
+            ay=sensorEvent.values[1];
+            az=sensorEvent.values[2];
+        }
+        if  (az>=20) {
+            isTabrakan = true;
+        }
+        if (isTabrakan) {
+            Log.d(TAG, "TABRAKAN!!");
+            //tvHasil.setText("TABRAKAN!!");
+        } else{
+            long timestamp = System.currentTimeMillis();
+            // Menampilkan log dari accelerometer beserta timestamp
+            String msg = "X: " + ax + ", Y: " + ay + ", Z: " + az + ", Timestamp: " + timestamp;
+            Log.d("Position", msg);
+            //tvHasil.setText(msg);
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sm.unregisterListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sm.registerListener(this, senAccel, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
